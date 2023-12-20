@@ -1,0 +1,30 @@
+[package]
+cairo-version = "2.4.0"
+name = "rock_paper"
+version = "0.1.0"
+
+
+[cairo]
+sierra-replace-ids = true
+
+[dependencies]
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.4.1" }
+cubit = { git = "https://github.com/akhercha/cubit", rev = "d3869a3f0c47e5ed229bbbfe2fce3fc0510cbc8a" }
+
+
+[[target.dojo]]
+
+[tool.dojo]
+initializer_class_hash = "0xrock"
+
+[tool.dojo.env]
+# Default account for katana with seed = 0
+rpc_url = "http://localhost:5050/"
+account_address = "0x517ececd29116499f4a1b64b094da79ba08dfd54a3edaa316134c41f8160973"
+private_key = "0x1800000000300000180000000000030000000000003006001800006600"
+
+# slot deploy
+# rpc_url = "https://api.cartridge.gg/x/satyam-emoji/katana"
+# account_address = "0x31ab3a4ffe451dbcd5a703f7a82d6cc0c2ee3216effb9df6fed4572567d469f"
+# private_key = "0x1a7728a79635b040786d61722b83030c20423f06214a84feb36ec22a47310d9"
+# world = "0x4e883243427b73a7fdf52f2db47f1e4f4130c79bd079aa3874b1dd336fee724"
