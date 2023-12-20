@@ -77,7 +77,8 @@ mod actions {
             let tile = tile_at_position(
                 x - config::ORIGIN_OFFSET.into(), y - config::ORIGIN_OFFSET.into()
             );
-
+            'tile'.print();
+            tile.print();
             let mut move_energy_cost = config::MOVE_ENERGY_COST;
             if tile == 3 {
                 move_energy_cost = move_energy_cost * 3;
@@ -158,7 +159,7 @@ mod actions {
         let fixed_value = (simplex_value + FixedTrait::from_unscaled_felt(1))
             / FixedTrait::from_unscaled_felt(2);
 
-        let value: u8 = FixedTrait::floor(fixed_value + FixedTrait::from_unscaled_felt(100))
+        let value: u8 = FixedTrait::floor(fixed_value * FixedTrait::from_unscaled_felt(100))
             .try_into()
             .unwrap();
 
@@ -248,7 +249,7 @@ mod actions {
         // Remove player components
         world.delete_entity('RPSType', entity_keys, layout.span());
         world.delete_entity('Position', entity_keys, layout.span());
-        world.delete_entity('Enegergy', entity_keys, layout.span());
+        world.delete_entity('Energy', entity_keys, layout.span());
     }
 }
 

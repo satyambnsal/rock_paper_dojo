@@ -68,4 +68,113 @@ mod tests {
         assert('r' == rps_type.rps, 'incorrect rps');
         assert(energy.amt == INITIAL_ENERGY, 'incorrect enegery');
     }
+
+    #[test]
+    #[available_gas(20000000000)]
+    fn dead_test() {
+        let (caller, world, actions_) = spawn_world();
+        actions_.spawn('r');
+        let player_id = get!(world, caller, (PlayerID)).player_id;
+
+        let (position, rps_type, energy) = get!(world, player_id, (Position, RPSType, Energy));
+        // kill player
+        actions::player_dead(world, player_id);
+
+        // player models should be 0
+        let (position, rps_type, energy) = get!(world, player_id, (Position, RPSType, Energy));
+        // 'energy'.print();
+        // energy.amt.print();
+        assert(position.x == 0, 'incorrect position.x');
+        assert(position.y == 0, 'incorrect position.y');
+        assert(energy.amt == 0, 'incorrect energy');
+    }
+
+    #[test]
+    #[available_gas(2000000000)]
+    fn random_spawn_test() {
+        let (caller, world, actions_) = spawn_world();
+        actions_.spawn('r');
+
+        let pos_p1 = get!(world, get!(world, caller, (PlayerID)).player_id, (Position));
+        let caller = starknet::contract_address_const::<'shivam'>();
+        starknet::testing::set_contract_address(caller);
+        actions_.spawn('r');
+
+        let pos_p2 = get!(world, get!(world, caller, (PlayerID)).player_id, (Position));
+
+        assert(pos_p1.x != pos_p2.x, 'spawn pos.x same');
+        assert(pos_p1.y != pos_p2.y, 'spawn pos.y same');
+    }
+
+    #[test]
+    #[available_gas(200000000)]
+    fn moves_test() {
+        let (caller, world, actions_) = spawn_world();
+        actions_.spawn('r');
+
+        let player_id = get!(world, caller, (PlayerID)).player_id;
+        assert(player_id == 1, 'Incorrect id');
+
+        let (spawn_pos, spawn_energy) = get!(world, player_id, (Position, Energy));
+
+        'Spawn energy'.print();
+        spawn_energy.amt.print();
+        actions_.move(Direction::Up);
+
+        let (pos, energy) = get!(world, player_id, (Position, Energy));
+        'After move'.print();
+        energy.amt.print();
+
+        // assert player moved and energy was deducted
+        assert(energy.amt == (spawn_energy.amt - MOVE_ENERGY_COST), 'incorrect energy');
+        assert(spawn_pos.x == pos.x, 'incorrect position.x');
+        assert(pos.y == spawn_pos.y - 1, 'incorrect position.y')
+    }
+
+    #[test]
+    #[available_gas(2000000000)]
+    fn player_at_position_test() {
+        let (caller, world, actions_) = spawn_world();
+        actions_.spawn('r');
+
+        let player_id = get!(world, caller, (PlayerID)).player_id;
+
+        // Get player position
+        let Position{x, y, player_id } = get!(world, player_id, Position);
+
+        assert(
+            actions::player_at_position(world, x, y) == player_id, 'player should be at position'
+        );
+
+        actions_.move(Direction::Up);
+
+        // Player shouldn't be at the old position
+        assert(actions::player_at_position(world, x, y) == 0, 'player should not be at pos');
+
+        // Get player's new position
+        let Position{x, y, player_id } = get!(world, player_id, Position);
+
+        // Player should be at new position
+        assert(actions::player_at_position(world, x, y) == player_id, 'player should be at pos');
+    }
+
+    #[test]
+    #[available_gas(2000000000)]
+    fn encounter_test() {
+        let (caller, world, actions_) = spawn_world();
+
+        assert(actions::encounter_win('r', 'p') == false, 'R v P should lose');
+        assert(actions::encounter_win('r', 's') == true, 'R v S should Win');
+        assert(actions::encounter_win('p', 's') == false, 'P v S should lose');
+        assert(actions::encounter_win('p', 'r') == true, 'P v R should win');
+        assert(actions::encounter_win('s', 'r') == false, 'S v R should lose');
+        assert(actions::encounter_win('s', 'p') == true, 'S v P should win');
+    }
+
+    #[test]
+    #[available_gas(2000000000)]
+    #[should_panic()]
+    fn encounter_rock_tie_panic() {
+        actions::encounter_win('r', 'r');
+    }
 }
