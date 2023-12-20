@@ -42,7 +42,7 @@ struct PlayerAtPosition {
 #[derive(Model, Copy, Drop, Serde)]
 struct Position {
     #[key]
-    position_id: u8,
+    player_id: u8,
     x: u8,
     y: u8
 }
@@ -50,7 +50,7 @@ struct Position {
 #[derive(Model, Copy, Drop, Serde)]
 struct RPSType {
     #[key]
-    rps_id: u8,
+    player_id: u8,
     rps: u8
 }
 
@@ -64,12 +64,12 @@ impl RPSTypeImpl of RPSTypeTrait {
 #[derive(Model, Copy, Drop, Serde)]
 struct Energy {
     #[key]
-    id: u8,
+    player_id: u8,
     amt: u8
 }
 
 #[derive(Model, Copy, Drop, Serde)]
-struct PlayerId {
+struct PlayerID {
     #[key]
     player: ContractAddress,
     player_id: u8
