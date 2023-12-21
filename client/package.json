@@ -9,12 +9,13 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "codegen": "graphql-codegen",
-    "copy-target": "cp -r ../contracts/target src/target"
+    "copy-target": "cp -r ../contracts/target src/target",
+    "component": "npx @dojoengine/core src/target/dev/manifest.json src/dojo/contractComponent.ts http://localhost:5050 0x4c8f99c6a9b022822bc7879c815e39272d216a3cd9fa75676fa6238ebe2ee93"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@dojoengine/core": "^0.2.0",
+    "@dojoengine/core": "^0.2.9",
     "@dojoengine/create-burner": "^0.2.0",
     "@dojoengine/react": "^0.2.0",
     "@dojoengine/recs": "0.1.35",
@@ -60,7 +61,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
-    "autoprefixer": "^10.4.16",        
+    "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5"
   }
