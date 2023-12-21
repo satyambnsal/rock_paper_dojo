@@ -1,5 +1,6 @@
 {
   "cairo1.enableLanguageServer": true,
   "cairo1.enableScarb": true,
-  "cairo1.languageServerPath": "/Users/satyam/.dojo/bin/dojo-language-server"
+  "cairo1.languageServerPath": "/Users/satyam/.dojo/bin/dojo-language-server",
+  "better-comments.multilineComments": false
 }

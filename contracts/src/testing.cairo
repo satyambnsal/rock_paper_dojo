@@ -2,7 +2,7 @@
 mod tests {
     use core::option::OptionTrait;
     use starknet::class_hash::Felt252TryIntoClassHash;
-    use starknet::{ContractAddress};
+    use starknet::{ContractAddress, contract_address_try_from_felt252};
     use debug::PrintTrait;
 
     // import world dispatcher
@@ -15,7 +15,8 @@ mod tests {
 
     use rock_paper::models::{
         position, player_at_position, rps_type, energy, player_id, player_address, Position,
-        PlayerAtPosition, RPSType, Energy, Direction, Vec2, PlayerID, PlayerAddress
+        PlayerAtPosition, RPSType, Energy, Direction, Vec2, PlayerID, PlayerAddress, GAME_DATA_KEY,
+        GameData
     };
 
     use rock_paper::actions::actions;
@@ -176,5 +177,36 @@ mod tests {
     #[should_panic()]
     fn encounter_rock_tie_panic() {
         actions::encounter_win('r', 'r');
+    }
+
+    #[test]
+    #[available_gas(200000000000)]
+    fn test_cleanup() {
+        let (caller, world, _action) = spawn_world();
+
+        let num_players = 30;
+        let mut i = 0;
+            let caller1 = starknet::contract_address_const::<'test'>();
+            starknet::testing::set_contract_address(caller1);
+            _action.spawn('r');
+
+            let caller1 = starknet::contract_address_const::<'test1'>();
+            starknet::testing::set_contract_address(caller1);
+            _action.spawn('p');
+
+            let caller1 = starknet::contract_address_const::<'test2'>();
+            starknet::testing::set_contract_address(caller1);
+            _action.spawn('s');
+
+            let caller1 = starknet::contract_address_const::<'test3'>();
+            starknet::testing::set_contract_address(caller1);
+            _action.spawn('r');
+
+            // set caller back to original caller
+            starknet::testing::set_contract_address(caller);
+            _action.cleanup();
+
+            let mut game_data = get!(world, GAME_DATA_KEY, (GameData));
+            assert(game_data.number_of_players == 0, 'not cleaned up');
     }
 }

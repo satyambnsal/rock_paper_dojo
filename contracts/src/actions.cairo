@@ -104,12 +104,16 @@ mod actions {
             );
 
             let mut game_data = get!(world, GAME_DATA_KEY, (GameData));
-            let mut i = game_data.number_of_players;
-            game_data.number_of_players = 0;
+            let total_players = game_data.number_of_players;
 
+            'total players'.print();
+            total_players.print();
+
+            game_data.number_of_players = 0;
+            let mut i = 1;
             set!(world, (game_data));
             loop {
-                if i > 20 {
+                if i > total_players {
                     break;
                 }
                 player_dead(world, i);
