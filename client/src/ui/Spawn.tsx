@@ -40,6 +40,7 @@ export const Spawn = () => {
                                         key as keyof typeof RPSSprites
                                     ],
                                 });
+                                setLoggedIn();
                             }}
                         >
                             Spawn {key}

@@ -8,13 +8,14 @@ import { updatePositionWithDirection } from "./utils";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
-const ACTIONS_PATH = "rock_paper::actions::actions";
+const ACTIONS_PATH = "actions";
 export function createSystemCalls(
     { execute }: SetupNetworkResult,
     { Position, PlayerID, Energy }: ClientComponents
 ) {
     const spawn = async (props: SpawnSystemProps) => {
         try {
+            console.log({ signer: props.signer, rps: props.rps });
             await execute(props.signer, ACTIONS_PATH, "spawn", [props.rps]);
         } catch (e) {
             console.error(e);
