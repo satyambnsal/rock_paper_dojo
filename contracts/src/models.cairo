@@ -31,7 +31,7 @@ struct Vec2 {
 }
 
 #[derive(Model, Copy, Drop, Serde)]
-struct PlayerAtPosition {
+struct PlayerAttPosition {
     #[key]
     x: u8,
     #[key]
@@ -48,7 +48,7 @@ struct Position {
 }
 
 #[derive(Model, Copy, Drop, Serde)]
-struct RPSType {
+struct RpsType {
     #[key]
     player_id: u8,
     rps: u8
@@ -56,7 +56,7 @@ struct RPSType {
 
 #[generate_trait]
 impl RPSTypeImpl of RPSTypeTrait {
-    fn get_type(self: RPSType) -> u8 {
+    fn get_type(self: RpsType) -> u8 {
         self.rps
     }
 }

@@ -12,7 +12,7 @@ mod actions {
     use rock_paper::interface::IActions;
 
     use rock_paper::models::{
-        GAME_DATA_KEY, GameData, Direction, Vec2, Position, PlayerAtPosition, RPSType, Energy,
+        GAME_DATA_KEY, GameData, Direction, Vec2, Position, PlayerAttPosition, RpsType, Energy,
         PlayerID, PlayerAddress
     };
 
@@ -44,7 +44,7 @@ mod actions {
                 clear_player_at_position(world, pos.x, pos.y);
             }
 
-            set!(world, (RPSType { player_id, rps }));
+            set!(world, (RpsType { player_id, rps }));
             // assert(
             //     game_data.number_of_players < config::X_RANGE * config::Y_RANGE,
             //     'maximum players reached'
@@ -133,18 +133,18 @@ mod actions {
     }
 
     fn clear_player_at_position(world: IWorldDispatcher, x: u8, y: u8) {
-        set!(world, (PlayerAtPosition { x, y, player_id: 0 }));
+        set!(world, (PlayerAttPosition { x, y, player_id: 0 }));
     }
 
     fn player_at_position(world: IWorldDispatcher, x: u8, y: u8) -> u8 {
-        get!(world, (x, y), (PlayerAtPosition)).player_id
+        get!(world, (x, y), (PlayerAttPosition)).player_id
     }
 
     fn player_position_and_energy(world: IWorldDispatcher, player_id: u8, x: u8, y: u8, amt: u8) {
         set!(
             world,
             (
-                PlayerAtPosition { x, y, player_id },
+                PlayerAttPosition { x, y, player_id },
                 Position { x, y, player_id },
                 Energy { player_id, amt }
             )
@@ -222,8 +222,8 @@ mod actions {
     // if the player dies return false
     // if the player kills the other player returns true
     fn encounter(world: IWorldDispatcher, player_id: u8, adversary_id: u8) -> bool {
-        let player_type = get!(world, player_id, (RPSType)).rps;
-        let adversary_type = get!(world, adversary_id, (RPSType)).rps;
+        let player_type = get!(world, player_id, (RpsType)).rps;
+        let adversary_type = get!(world, adversary_id, (RpsType)).rps;
         if encounter_win(player_type, adversary_type) {
             player_dead(world, adversary_id);
             true
@@ -248,10 +248,10 @@ mod actions {
         world.delete_entity('PlayerAddress', entity_keys, layout.span());
 
         set!(world, (PlayerID { player, player_id: 0 }));
-        set!(world, (Position { player_id, x: 0, y: 0 }, RPSType { player_id, rps: 0 }));
+        set!(world, (Position { player_id, x: 0, y: 0 }, RpsType { player_id, rps: 0 }));
 
         // Remove player components
-        world.delete_entity('RPSType', entity_keys, layout.span());
+        world.delete_entity('RpsType', entity_keys, layout.span());
         world.delete_entity('Position', entity_keys, layout.span());
         world.delete_entity('Energy', entity_keys, layout.span());
     }
